@@ -54,12 +54,62 @@ class _FlutterCloudKitExampleState extends State<FlutterCloudKitExample> {
               ElevatedButton(
                 onPressed: () async {
                   var record = {key.text: value.text};
+                  var record1 = {
+                    "id": 1,
+                    "assets_type": 1,
+                    "lastowner": null,
+                    "name": "House ",
+                    "dateprch": "01\/10\/2023",
+                    "dateofgar": "04\/10\/2023",
+                    "prchvalue": 100000.0,
+                    "company_id": 1,
+                    "fam_memId": 2,
+                    "totalcost": null,
+                    "actvalue": null,
+                    "rfortermination": null,
+                    "valid_to": null,
+                    "createdAt": "2023\/10\/04 13:27:44"
+                  };
+
+                  var record2 = {
+                    "id": 2,
+                    "assets_type": 1,
+                    "lastowner": null,
+                    "name": "House test",
+                    "dateprch": "11\/10\/2023",
+                    "dateofgar": "",
+                    "prchvalue": 10000.0,
+                    "company_id": 0,
+                    "fam_memId": 0,
+                    "totalcost": null,
+                    "actvalue": null,
+                    "rfortermination": null,
+                    "valid_to": null,
+                    "createdAt": "2023\/10\/04 13:28:20"
+                  };
+                  var record3 = {
+                    "id": 3,
+                    "assets_type": 1,
+                    "lastowner": null,
+                    "name": "Test",
+                    "dateprch": "05\/10\/2023",
+                    "dateofgar": "",
+                    "prchvalue": 60.0,
+                    "company_id": 0,
+                    "fam_memId": 0,
+                    "totalcost": null,
+                    "actvalue": null,
+                    "rfortermination": null,
+                    "valid_to": null,
+                    "createdAt": "2023\/10\/05 12:43:06"
+                  };
                   try {
                     await cloudKit.saveRecord(
-                        scope: databaseScope,
-                        recordType: exampleRecordType,
-                        record: record,
-                        recordName: recordName.text);
+                      scope: databaseScope,
+                      recordType: exampleRecordType,
+                      record: record,
+                      recordName: recordName.text,
+                    );
                     _debugMessage('Successfully saved the record $record');
                   } catch (e) {
                     _debugMessage('Failed to save the record: $e');
@@ -71,12 +121,8 @@ class _FlutterCloudKitExampleState extends State<FlutterCloudKitExample> {
                 onPressed: () async {
                   var name = recordName.text;
                   try {
-                    var fetchedRecord = await cloudKit.getRecord(
-                        scope: databaseScope, recordName: name);
-                    fetchedRecordsText = [
-                      'Fetched record:',
-                      _recordToString(fetchedRecord)
-                    ];
+                    var fetchedRecord = await cloudKit.getRecord(scope: databaseScope, recordName: name);
+                    fetchedRecordsText = ['Fetched record:', _recordToString(fetchedRecord)];
                     _debugMessage('Successfully got the record by name $name');
                     setState(() {});
                   } catch (e) {
@@ -88,13 +134,10 @@ class _FlutterCloudKitExampleState extends State<FlutterCloudKitExample> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    var fetchedRecordsByType = await cloudKit.getRecordsByType(
-                        scope: databaseScope, recordType: exampleRecordType);
+                    var fetchedRecordsByType = await cloudKit.getRecordsByType(scope: databaseScope, recordType: exampleRecordType);
                     fetchedRecordsText = ['Fetched records:'];
-                    fetchedRecordsText.addAll(
-                        fetchedRecordsByType.map((e) => _recordToString(e)));
-                    _debugMessage(
-                        'Successfully got ${fetchedRecordsByType.length} records by type');
+                    fetchedRecordsText.addAll(fetchedRecordsByType.map((e) => _recordToString(e)));
+                    _debugMessage('Successfully got ${fetchedRecordsByType.length} records by type');
                     setState(() {});
                   } catch (e) {
                     _debugMessage("Error getting records by type: $e");
@@ -106,8 +149,7 @@ class _FlutterCloudKitExampleState extends State<FlutterCloudKitExample> {
                 onPressed: () async {
                   var name = recordName.text;
                   try {
-                    await cloudKit.deleteRecord(
-                        scope: databaseScope, recordName: name);
+                    await cloudKit.deleteRecord(scope: databaseScope, recordName: name);
                     _debugMessage('Successfully deleted record by name $name');
                   } catch (e) {
                     _debugMessage('Error deleting the record $name: $e');
@@ -122,10 +164,7 @@ class _FlutterCloudKitExampleState extends State<FlutterCloudKitExample> {
                 },
                 child: const Text('Get account status'),
               ),
-              Column(
-                  children: fetchedRecordsText
-                      .map((e) => Text(e, textAlign: TextAlign.center))
-                      .toList()),
+              Column(children: fetchedRecordsText.map((e) => Text(e, textAlign: TextAlign.center)).toList()),
             ],
           )),
     );
@@ -140,10 +179,6 @@ class _FlutterCloudKitExampleState extends State<FlutterCloudKitExample> {
 }
 
 String _recordToString(CloudKitRecord record) {
-  var obj = {
-    'recordType': record.recordType,
-    'recordName': record.recordName,
-    'values': record.values
-  };
+  var obj = {'recordType': record.recordType, 'recordName': record.recordName, 'values': record.values};
   return jsonEncode(obj);
 }
